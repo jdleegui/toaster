@@ -33,6 +33,39 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 - [X] [Step 1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch1)
 ```
 1.Create ToasterImpl class in eclipse.
+
+toaster$ cat toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
+/*
+ * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.toaster.impl;
+
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ToasterImpl implements BindingAwareProvider, AutoCloseable {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ToasterImpl.class);
+	@Override
+	public void close() throws Exception {
+		// TODO_Auto-generated method stub
+		LOG.info("Toaster Closed!");
+	}
+
+	@Override
+	public void onSessionInitiated(ProviderContext arg0) {
+		// TODO_Auto-generated method stub
+		LOG.info("Toaster World!");
+	}
+}
+toaster$ 
+
 2.mvn clean generate-sources
   mvn clean install -DskipTests
 3.toaster$ ./karaf/target/assembly/bin/karaf 
@@ -42,6 +75,159 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 ```
 ## 2. Create RPC
 - [X] [Step 2](https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch2)
+- LeeJD~/Documents/workspace/toaster$ cat toaster/api/src/main/yang/toaster.yang 
+  module toaster {
+      yang-version 1;
+      namespace "urn:opendaylight:params:xml:ns:yang:toaster";
+      prefix "toaster";
+  
+      revision "2015-01-05" {
+          description "Initial revision of toaster model";
+      }
+  
+      organization "Netconf Central";
+      contact
+        "Andy Bierman <andy@netconfcentral.org>";
+  
+      description
+        "YANG version of the TOASTER-MIB.";
+  
+      identity toast-type {
+        description
+           "Base for all bread types supported by the toaster.
+            New bread types not listed here nay be added in the future.";
+      }
+  
+      identity white-bread {
+         base toaster:toast-type;
+         description "White bread.";
+      }
+    identity wonder-bread {
+          base toast-type;
+          description "Wonder bread.";
+      }
+  
+      identity frozen-waffle {
+          base toast-type;
+          description "Frozen waffle.";
+      }
+  
+      identity frozen-bagel {
+          base toast-type;
+          description "Frozen bagel.";
+      }
+  
+      identity hash-brown {
+          base toast-type;
+          description "Hash browned potatos.";
+      }
+  
+      typedef DisplayString {
+          type string {
+              length "0 .. 255";
+          }
+      
+          description
+              "YANG version of the SMIv2 DisplayString TEXTUAL-CONVENTION.";
+          reference
+             "RFC 2579, section 2.";
+      }
+  
+      container toaster {
+          presence
+              "Indicates the toaster service is available";
+          description
+              "Top-level container for all toaster database objects.";
+          leaf toasterManufacturer {
+              type DisplayString;
+              config false;
+              mandatory true;
+              description
+                  "The name of the toaster's manufacturer. For instance,
+                      Microsoft Toaster.";
+           }
+  
+           leaf toasterModelNumber {
+               type DisplayString;
+               config false;
+               mandatory true;
+               description
+               "The name of the toaster's model. For instance,
+                   Radiant Automatic.";
+           }
+  
+           leaf toasterStatus {
+               type enumeration {
+                   enum "up" {
+                       value 1;
+                       description
+                           "The toaster knob position is up.
+                               No toast is being made now.";
+                   }
+                   enum "down" {
+                       value 2;
+                       description
+                           "The toaster knob position is down.
+                               Toast is being made now.";
+                   }
+               }
+               config false;
+               mandatory true;
+               description
+                   "This variable indicates the current state of
+                       the toaster.";
+          }
+         leaf darknessFactor {
+              type uint32;
+              config true;
+              default 1000;
+              description
+                   "The darkness factor. Basically, the number of ms to multiple the doneness value by.";
+          }
+      } // container toaster
+   
+      rpc make-toast {
+          input {
+              leaf toasterDoneness {
+                  type uint32 {
+                      range "1 .. 10";
+                  }
+                  default '5';
+              }
+              leaf toasterToastType {
+                  type identityref {
+                      base toaster:toast-type;
+                  }
+                  default 'wheat-bread';
+              }
+          }
+      } // rpc make-toast
+   
+      rpc cancel-toast {
+      }  // rpc cancel-toast
+  
+      rpc restock-toaster {
+          input {
+              leaf amountOfBreadToStock {
+                  type uint32;
+              }
+          }
+      }
+  
+      notification toasterOutOfBread {
+      } // notification toasterOutOfStock
+  
+      notification toasterRestocked {
+          leaf amountOfBread {
+              type uint32;
+              description
+                  "Indicates the amount of bread that was re-stocked";
+          }
+      } // notification toasterOutOfStock
+  }
+
+- mvn clean install -DskipTests
+- curl --verbose -u admin:admin http://localhost:8181/restconf/config/toaster:toaster
 
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
