@@ -9,9 +9,9 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
+## prepare project
 - [x] Creating project
 ```
-## prepare project
 1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
