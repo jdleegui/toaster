@@ -41,7 +41,7 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 4.git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
 ```
 ## 2. Create RPC
-- [X] [Step 2] https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch2)
+- [X] [Step 2](https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch2)
 
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
