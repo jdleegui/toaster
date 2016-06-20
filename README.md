@@ -23,10 +23,9 @@ Define value for property 'artifactId': : toaster
 Define value for property 'package':  org.opendaylight.toaster: : 
 Define value for property 'classPrefix':  Toaster: : ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
 Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.  
-3.  
-git add toaster && git add README.md && git commit -m "Update README.md" && git push -u origin master
-4.
-[Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
+3. git add toaster && git add README.md && git commit -m "Update README.md" && git push -u origin master
+4. [Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
+5. mvn clean install -DskipTests
 
 ```
 - [ ] Step 1
