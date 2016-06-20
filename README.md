@@ -32,13 +32,15 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 ## 2. Windup with skeleton
 - [X] [Step 1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch1)
 ```
-1. Create ToasterImpl class in eclipse.
-2. mvn clean install -DskipTests
-3. toaster$ ./karaf/target/assembly/bin/karaf 
-
-- git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
+1.Create ToasterImpl class in eclipse.
+2.mvn clean generate-sources
+  mvn clean install -DskipTests
+3.toaster$ ./karaf/target/assembly/bin/karaf 
+  > display
+  > feature:list
+4.git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
 ```
-- See :w
+- See
 
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)

@@ -18,12 +18,12 @@ public class ToasterImpl implements BindingAwareProvider, AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		// TODO_Auto-generated method stub
-		
+		LOG.info("Toaster Closed!");
 	}
 
 	@Override
 	public void onSessionInitiated(ProviderContext arg0) {
 		// TODO_Auto-generated method stub
-		LOG.info("Hello World!");
+		LOG.info("Toaster World!");
 	}
 }
