@@ -9,7 +9,7 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
-## prepare project
+## 1. prepare project
 - [x] Creating project
 ```
 1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
@@ -25,8 +25,10 @@ Define value for property 'classPrefix':  Toaster: : ${artifactId.substring(0,1)
 Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.  
 3. git add toaster && git add README.md && git commit -m "Update README.md" && git push -u origin master
 4. [Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
-5. mvn clean install -DskipTests
-
+5. toaster$ mvn clean install -DskipTests
+6. toaster$ ./karaf/target/assembly/bin/karaf 
+*. [guide1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0)
+ . [guide2] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0-old)
 ```
 - [ ] Step 1
 - [ ] Send state
