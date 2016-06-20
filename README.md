@@ -27,9 +27,9 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 4. [Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
 5. toaster$ mvn clean install -DskipTests
 6. toaster$ ./karaf/target/assembly/bin/karaf 
+```
 *. [guide1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0)
  . [guide2] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0-old)
-```
 - [ ] Step 1
 - [ ] Send state
 
