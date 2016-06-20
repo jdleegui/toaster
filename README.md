@@ -7,6 +7,7 @@ git remote add origin https://github.com/jdleegui/toaster.git
 git commit -m "toaster example"
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 git push -u origin master
+git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
 - [x] Creating project
 ```
