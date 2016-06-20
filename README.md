@@ -11,24 +11,22 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 ```
 - [x] Creating project
 ```
-
-1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc 
-
+## prepare project
+1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
 mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
--DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml
-
+-DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
 2. 
 Define value for property 'groupId': : org.opendaylight.toaster
 Define value for property 'artifactId': : toaster
 [INFO] Using property: version = 1.0.0-SNAPSHOT
 Define value for property 'package':  org.opendaylight.toaster: : 
 Define value for property 'classPrefix':  Toaster: : ${artifactId.substring(0,1).toUpperCase()}${artifactId.substring(1)}
-Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc. 
-
-3. 
-
+Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.  
+3.  
 git add toaster && git add README.md && git commit -m "Update README.md" && git push -u origin master
+4.
+[Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
 
 ```
 - [ ] Step 1
