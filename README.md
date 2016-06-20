@@ -1,5 +1,5 @@
 # toaster (SDN typical example)
-
+  [Table of contents] (https://wiki.opendaylight.org/view/Special:Search/Controller_Core_Functionality_Tutorials)
 ```
 git init
 git add README.md
@@ -9,7 +9,7 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 git push -u origin master
 git add README.md && git commit -m "Update README.md" && git push -u origin master
 ```
-## 1. prepare project
+## 0. prepare project
 - [x] [ Setp0 ] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0)
 - [x] [ Setp2 ] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0-old)
 ```
@@ -29,7 +29,7 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 5. toaster$ mvn clean install -DskipTests
 6. toaster$ ./karaf/target/assembly/bin/karaf 
 ```
-## 2. Windup with skeleton
+## 1. Windup with skeleton
 - [X] [Step 1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch1)
 ```
 1.Create ToasterImpl class in eclipse.
@@ -40,7 +40,8 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
   > feature:list
 4.git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
 ```
-- See
+## 2. Create RPC
+- [X] [Step 2] https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch2)
 
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
