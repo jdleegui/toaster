@@ -16,7 +16,9 @@ git add README.md && git commit -m "Update README.md" && git push -u origin mast
 - [x] [ Setp2 ] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0-old)
 ```
 1.  guide : https://github.com/opendaylight/docs/blob/master/manuals/developer-guide/src/main/asciidoc/developing-app.adoc
-mvn archetype:generate -DarchetypeGroupId=org.opendaylight.controller -DarchetypeArtifactId=opendaylight-startup-archetype \
+mvn archetype:generate \
+-DarchetypeGroupId=org.opendaylight.controller \
+-DarchetypeArtifactId=opendaylight-startup-archetype \
 -DarchetypeRepository=https://nexus.opendaylight.org/content/repositories/public/ \
 -DarchetypeCatalog=https://nexus.opendaylight.org/content/repositories/public/archetype-catalog.xml 
 2. 
