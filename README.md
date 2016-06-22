@@ -83,156 +83,171 @@ toaster$
 ## 2. Create RPC
 - [X] [Step 2](https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch2)
 - LeeJD~/Documents/workspace/toaster$ cat toaster/api/src/main/yang/toaster.yang 
+```
   module toaster {
-      yang-version 1;
-      namespace "urn:opendaylight:params:xml:ns:yang:toaster";
-      prefix "toaster";
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:toaster";
+     
+    prefix "toaster";
   
-      revision "2015-01-05" {
-          description "Initial revision of toaster model";
-      }
-  
-      organization "Netconf Central";
-      contact
-        "Andy Bierman <andy@netconfcentral.org>";
-  
-      description
-        "YANG version of the TOASTER-MIB.";
-  
-      identity toast-type {
-        description
-           "Base for all bread types supported by the toaster.
-            New bread types not listed here nay be added in the future.";
-      }
-  
-      identity white-bread {
-         base toaster:toast-type;
-         description "White bread.";
-      }
-    identity wonder-bread {
-          base toast-type;
-          description "Wonder bread.";
-      }
-  
-      identity frozen-waffle {
-          base toast-type;
-          description "Frozen waffle.";
-      }
-  
-      identity frozen-bagel {
-          base toast-type;
-          description "Frozen bagel.";
-      }
-  
-      identity hash-brown {
-          base toast-type;
-          description "Hash browned potatos.";
-      }
-  
-      typedef DisplayString {
-          type string {
-              length "0 .. 255";
-          }
+    revision "2015-01-05" {
+      description "Initial revision of toaster model";
+    }
       
-          description
-              "YANG version of the SMIv2 DisplayString TEXTUAL-CONVENTION.";
-          reference
-             "RFC 2579, section 2.";
+    identity toast-type {
+      description
+        "Base for all bread types supported by the toaster.
+         New bread types not listed here nay be added in the
+         future.";
+    }
+    
+    identity white-bread {
+      base toast:toast-type;
+      description "White bread.";
+    }
+  
+    identity wheat-bread {
+      base toast-type;
+      description "Wheat bread.";
+    }
+  
+    identity wonder-bread {
+      base toast-type;
+      description "Wonder bread.";
+    }
+  
+    identity frozen-waffle {
+      base toast-type;
+      description "Frozen waffle.";
+    }
+  
+    identity frozen-bagel {
+      base toast-type;
+      description "Frozen bagel.";
+    }
+  
+    identity hash-brown {
+      base toast-type;
+      description "Hash browned potatos.";
+    }
+  
+    typedef DisplayString {
+      type string {
+        length "0 .. 255";
+      }
+      description
+        "YANG version of the SMIv2 DisplayString TEXTUAL-CONVENTION.";
+      reference
+        "RFC 2579, section 2.";
+    }
+  
+    container toaster {
+      presence
+        "Indicates the toaster service is available";
+      description
+        "Top-level container for all toaster database objects.";
+      leaf toasterManufacturer {
+        type DisplayString;
+        config false;
+        mandatory true;
+        description
+          "The name of the toaster's manufacturer. For instance,
+           Microsoft Toaster.";
       }
   
-      container toaster {
-          presence
-              "Indicates the toaster service is available";
-          description
-              "Top-level container for all toaster database objects.";
-          leaf toasterManufacturer {
-              type DisplayString;
-              config false;
-              mandatory true;
-              description
-                  "The name of the toaster's manufacturer. For instance,
-                      Microsoft Toaster.";
-           }
-  
-           leaf toasterModelNumber {
-               type DisplayString;
-               config false;
-               mandatory true;
-               description
-               "The name of the toaster's model. For instance,
-                   Radiant Automatic.";
-           }
-  
-           leaf toasterStatus {
-               type enumeration {
-                   enum "up" {
-                       value 1;
-                       description
-                           "The toaster knob position is up.
-                               No toast is being made now.";
-                   }
-                   enum "down" {
-                       value 2;
-                       description
-                           "The toaster knob position is down.
-                               Toast is being made now.";
-                   }
-               }
-               config false;
-               mandatory true;
-               description
-                   "This variable indicates the current state of
-                       the toaster.";
-          }
-         leaf darknessFactor {
-              type uint32;
-              config true;
-              default 1000;
-              description
-                   "The darkness factor. Basically, the number of ms to multiple the doneness value by.";
-          }
-      } // container toaster
-   
-      rpc make-toast {
-          input {
-              leaf toasterDoneness {
-                  type uint32 {
-                      range "1 .. 10";
-                  }
-                  default '5';
-              }
-              leaf toasterToastType {
-                  type identityref {
-                      base toaster:toast-type;
-                  }
-                  default 'wheat-bread';
-              }
-          }
-      } // rpc make-toast
-   
-      rpc cancel-toast {
-      }  // rpc cancel-toast
-  
-      rpc restock-toaster {
-          input {
-              leaf amountOfBreadToStock {
-                  type uint32;
-              }
-          }
+      leaf toasterModelNumber {
+        type DisplayString;
+        config false;
+        mandatory true;
+        description
+          "The name of the toaster's model. For instance,
+           Radiant Automatic.";
       }
   
-      notification toasterOutOfBread {
-      } // notification toasterOutOfStock
-  
-      notification toasterRestocked {
-          leaf amountOfBread {
-              type uint32;
-              description
-                  "Indicates the amount of bread that was re-stocked";
+      leaf toasterStatus {
+        type enumeration {
+          enum "up" {
+            value 1;
+            description
+              "The toaster knob position is up.
+               No toast is being made now.";
           }
-      } // notification toasterOutOfStock
+          enum "down" {
+            value 2;
+            description
+              "The toaster knob position is down.
+               Toast is being made now.";
+          }
+        }
+        config false;
+        mandatory true;
+        description
+          "This variable indicates the current state of
+           the toaster.";
+      }
+  
+      leaf darknessFactor {
+        type uint32;
+        config true;
+        default 1000;
+        description
+          "The darkness factor. Basically, the number of ms to multiple the doneness value by.";
+      }
+    } // container toaster
+   
+    rpc make-toast {
+      input {
+        leaf toasterDoneness {
+          type uint32 {
+            range "1 .. 10";
+          }
+          default '5';
+        }
+        leaf toasterToastType {
+          type identityref {
+            base toast:toast-type;
+          }
+          default 'wheat-bread';
+        }
+      }
+    } // rpc make-toast
+   
+    rpc cancel-toast {
+    } // rpc cancel-toast
+  
+    rpc restock-toaster {
+      input {
+        leaf amountOfBreadToStock {
+          type uint32;
+        }
+      }
+    }
+  
+    notification toasterOutOfBread {
+    } // notification toasterOutOfStock
+  
+    notification toasterRestocked {
+      leaf amountOfBread {
+        type uint32;
+        description
+          "Indicates the amount of bread that was re-stocked";
+      }
+    } // notification toasterOutOfStock  
+  
+    rpc geust-seat {
+      input {
+        leaf name {
+          type string;
+        }
+      }
+      output {
+        leaf table {
+          type string;
+        }
+      }
+    }
   }
-
+``` 
 - mvn clean install -DskipTests
 - curl --verbose -u admin:admin http://localhost:8181/restconf/config/toaster:toaster
 
