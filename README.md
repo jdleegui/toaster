@@ -1,6 +1,7 @@
 # toaster (SDN typical example)
 - [Table of contents] (https://wiki.opendaylight.org/view/Special:Search/Controller_Core_Functionality_Tutorials)
 - [Another hidden contents] (https://github.com/opendaylight/coretutorials/tree/stable/beryllium/toaster)
+- [Basic guide] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
 ```
 git init
 git add README.md
