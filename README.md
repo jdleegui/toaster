@@ -32,6 +32,9 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 4. [Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
 5. toaster$ mvn clean install -DskipTests
 6. toaster$ ./karaf/target/assembly/bin/karaf 
+7. opendaylight-user@root>log:display|grep 'Initiated'
+   2016-06-22 19:25:28,162 | INFO  | config-pusher    | ToasterProvider | 154 - org.opendaylight.toaster.impl - 1.0.0.SNAPSHOT | ToasterProvider Session Initiated
+  opendaylight-user@root>
 ```
 ## 1. Windup with skeleton
 - [X] [Step 1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch1)
