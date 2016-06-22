@@ -8,22 +8,27 @@
 package org.opendaylight.toaster.impl;
 
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
 import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
-
+    RpcRegistration < ToasterService > toasterService;
+    
     @Override
     public void onSessionInitiated(ProviderContext session) {
         LOG.info("ToasterProvider Session Initiated");
+        toasterService = session.addRpcImplementation(ToasterService.class, new ToasterImpl());
     }
 
     @Override
     public void close() throws Exception {
         LOG.info("ToasterProvider Closed");
+        if (toasterService != null)
+        	toasterService.close();
     }
-
 }

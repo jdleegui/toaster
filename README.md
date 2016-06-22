@@ -32,16 +32,17 @@ Define value for property 'copyright': : Copyright (c) 2015 Yoyodyne, Inc.
 4. [Guide] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch0#Introduction )
 5. toaster$ mvn clean install -DskipTests
 6. toaster$ ./karaf/target/assembly/bin/karaf 
-7. opendaylight-user@root>log:display|grep 'Initiated'
-   2016-06-22 19:25:28,162 | INFO  | config-pusher    | ToasterProvider | 154 - org.opendaylight.toaster.impl - 1.0.0.SNAPSHOT | ToasterProvider Session Initiated
-  opendaylight-user@root>
+7. opendaylight-user@root>log:display|grep 'Toaster'
+   2016-06-22 20:04:46,837 | INFO  | config-pusher    | ToasterProvider | 154 - org.opendaylight.toaster.impl - 1.0.0.SNAPSHOT | ToasterProvider Session Initiated
+opendaylight-user@root>
 ```
 ## 1. Windup with skeleton
 - [X] [Step 1] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Tutorials:Starting_A_Project:ch1)
 ```
-1.Create ToasterImpl class in eclipse.
+1.Check generated code and test if the log appeared in time.
 
-toaster$ cat toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
+toaster$ cat toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterProvider.java 
+
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
  *
@@ -56,22 +57,20 @@ import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ToasterImpl implements BindingAwareProvider, AutoCloseable {
+public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ToasterImpl.class);
-	@Override
-	public void close() throws Exception {
-		// TODO_Auto-generated method stub
-		LOG.info("Toaster Closed!");
-	}
+  private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
 
-	@Override
-	public void onSessionInitiated(ProviderContext arg0) {
-		// TODO_Auto-generated method stub
-		LOG.info("Toaster World!");
-	}
+  @Override
+  public void onSessionInitiated(ProviderContext session) {
+    LOG.info("ToasterProvider Session Initiated");
+  }
+
+  @Override
+  public void close() throws Exception {
+    LOG.info("ToasterProvider Closed");
+  } 
 }
-toaster$ 
 
 2.mvn clean generate-sources
   mvn clean install -DskipTests
@@ -234,7 +233,7 @@ module toaster {
     }
   } // notification toasterOutOfStock  
 
-  rpc geust-seat {
+  rpc guest-seat {
     input {
       leaf name {
         type string;
@@ -247,10 +246,119 @@ module toaster {
     }
   }
 }
+
 ``` 
 - mvn clean install -DskipTests
 - curl --verbose -u admin:admin http://localhost:8181/restconf/config/toaster:toaster
+## 3. Create basic skeleton code
+- [X] [Step 3] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
+      :Exersice 3:w
 
+```
+1.Create ToasterImpl class in eclipse.
+
+toaster$ cat toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
+/*
+ * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.toaster.impl;
+
+import java.util.concurrent.Future;
+
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.MakeToastInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.RestockToasterInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
+import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ToasterImpl implements ToasterService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
+
+  @Override
+  public Future<RpcResult<Void>> cancelToast() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Future<RpcResult<Void>> makeToast(MakeToastInput input) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Future<RpcResult<Void>> restockToaster(RestockToasterInput input) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Future<RpcResult<GuestSeatOutput>> guestSeat(GuestSeatInput input) {
+    // TODO_Auto-generated method stub
+    GuestSeatOutput output = new GuestSeatOutputBuilder()
+      .setTable("Table of Toaster Guest:" + input.getName())
+      .build();
+    return RpcResultBuilder.success(output).buildFuture();
+  }
+}
+2. Modify ToasterProvider to initiate toasterImpl class
+/*
+ * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.toaster.impl;
+
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
+import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
+    RpcRegistration < ToasterService > toasterService;
+    
+    @Override
+    public void onSessionInitiated(ProviderContext session) {
+        LOG.info("ToasterProvider Session Initiated");
+        toasterService = session.addRpcImplementation(ToasterService.class, new ToasterImpl());
+    }
+
+    @Override
+    public void close() throws Exception {
+        LOG.info("ToasterProvider Closed");
+        if (toasterService != null)
+        	toasterService.close();
+    }
+}
+
+``` 
+2.mvn clean generate-sources
+  mvn clean install -DskipTests
+3.toaster$ ./karaf/target/assembly/bin/karaf 
+  > display
+  > feature:list
+4.git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
+```
+#
+
+
+p
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
 - [hello_world1] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
