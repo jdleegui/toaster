@@ -252,8 +252,7 @@ module toaster {
 - curl --verbose -u admin:admin http://localhost:8181/restconf/config/toaster:toaster
 ## 3. Create basic skeleton code
 - [X] [Step 3] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
-      :Exersice 3:w
-
+      :Exersice 3:w 
 ```
 1.Create ToasterImpl class in eclipse.
 
@@ -311,6 +310,7 @@ public class ToasterImpl implements ToasterService {
     return RpcResultBuilder.success(output).buildFuture();
   }
 }
+
 2. Modify ToasterProvider to initiate toasterImpl class
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
@@ -347,7 +347,6 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
     }
 }
 
-``` 
 2.mvn clean generate-sources
   mvn clean install -DskipTests
 3.toaster$ ./karaf/target/assembly/bin/karaf 
@@ -358,7 +357,6 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 #
 
 
-p
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
 - [hello_world1] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
