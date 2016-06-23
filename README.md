@@ -311,7 +311,6 @@ public class ToasterImpl implements ToasterService {
   }
 }
 ```
-
 2. Modify ToasterProvider to initiate toasterImpl class
 
 ```
