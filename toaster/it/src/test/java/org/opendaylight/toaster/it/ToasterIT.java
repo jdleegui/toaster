@@ -130,6 +130,7 @@ public class ToasterIT extends AbstractMdsalTestBase {
         future.get(100, TimeUnit.MILLISECONDS);
         Assert.assertTrue(name + " not recorded in greeting registry", future.isDone());
     }
+    
     @Test
     private void validateRPCResponse(String name,String response) throws InterruptedException, ExecutionException {
         ToasterService service = getSession().getRpcService(ToasterService.class);
@@ -143,7 +144,6 @@ public class ToasterIT extends AbstractMdsalTestBase {
         Assert.assertEquals("Did not receive the expected response to helloWorld RPC", response,
                 outputResult.getResult().getTable());
     }
-    
     
     private void programResponse(String name, String response) throws TransactionCommitFailedException {
         DataBroker db = getSession().getSALService(DataBroker.class);
