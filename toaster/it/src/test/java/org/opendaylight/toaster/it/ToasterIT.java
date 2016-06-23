@@ -11,10 +11,26 @@ import static org.ops4j.pax.exam.CoreOptions.composite;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFilePut;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.mdsal.it.base.AbstractMdsalTestBase;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChair;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInputBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntryKey;
+import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
@@ -23,6 +39,9 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.CheckedFuture;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerClass.class)
@@ -66,5 +85,37 @@ public class ToasterIT extends AbstractMdsalTestBase {
     @Test
     public void testtoasterFeatureLoad() {
         Assert.assertTrue(true);
+    }
+
+    @Test
+    public void testRPC() throws InterruptedException, ExecutionException {
+        String name = "Ed Warnicke";
+        ToasterService service = getSession().getRpcService(ToasterService.class);
+
+        GuestSeatInput input = new GuestSeatInputBuilder()
+                .setName(name)
+                .build();
+        Future<RpcResult<GuestSeatOutput>> outputFuture = service.guestSeat(input);
+        RpcResult<GuestSeatOutput> outputResult = outputFuture.get();
+        Assert.assertTrue("RPC was unsuccessful", outputResult.isSuccessful());
+        Assert.assertEquals("Did not receive the expected response to helloWorld RPC", "Hello " + name,
+                outputResult.getResult().getTable());
+    }
+    
+    @Test
+    private void validateGuestChair(String name) {
+        InstanceIdentifier<GuestChairEntry> iid = InstanceIdentifier.create(GuestChair.class)
+                .child(GuestChairEntry.class, new GuestChairEntryKey(name));
+        DataBroker db = getSession().getSALService(DataBroker.class);
+        ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
+        CheckedFuture<Optional<GuestChairEntry>, ReadFailedException> future =
+                transaction.read(LogicalDatastoreType.OPERATIONAL, iid);
+        Optional<GuestChairEntry> optional = Optional.absent();
+        try {
+            optional = future.checkedGet();
+        } catch (ReadFailedException e) {
+            LOG.warn("Reading greeting failed:",e);
+        }
+        Assert.assertTrue(name + " not recorded in greeting registry",optional.isPresent());
     }
 }
