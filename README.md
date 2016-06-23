@@ -311,7 +311,9 @@ public class ToasterImpl implements ToasterService {
   }
 }
 ```
+
 2. Modify ToasterProvider to initiate toasterImpl class
+
 ```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
