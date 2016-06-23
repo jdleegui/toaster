@@ -1166,6 +1166,222 @@ public class ToasterIT extends AbstractMdsalTestBase {
     }
 }
 ```
+## Add default callback stuff to check toast maker
+```
+/*
+ * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+package org.opendaylight.toaster.impl;
+
+import java.util.concurrent.Future;
+
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
+import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
+import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.DisplayString;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChair;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChairBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.MakeToastInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.RestockToasterInput;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.Toaster;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.Toaster.ToasterStatus;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntryBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntryKey;
+import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
+import org.opendaylight.yangtools.yang.common.RpcResult;
+import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.CheckedFuture;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+
+public class ToasterImpl implements ToasterService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
+    private DataBroker db;
+    public static final InstanceIdentifier<Toaster> TOASTER_IID = InstanceIdentifier.builder(Toaster.class).build();
+    private static final DisplayString TOASTER_MANUFACTURER = new DisplayString("Opendaylight");
+    private static final DisplayString TOASTER_MODEL_NUMBER = new DisplayString("Model 1 - Binding Aware");  
+    
+    public ToasterImpl(DataBroker dba)
+    {
+    	db = dba;
+    	initializeDataTree(db);
+    }
+
+    /**
+     * Restconf RPC call implemented from the ToasterService interface.
+     * Cancels the current toast.
+     * Implementation to be filled in a later chapter.
+     * in postman, http://localhost:8181/restconf/operations/toaster:cancel-toast
+     */
+	@Override
+	public Future<RpcResult<Void>> cancelToast() {
+		// TODO_Always return success from the cancel toast call.
+		LOG.info("cancelToast");
+		return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+	}
+    
+    /**
+     * RestConf RPC call implemented from the ToasterService interface.
+     * Attempts to make toast.
+     * Implementation to be filled in a later chapter.
+     * in postman, http://localhost:8181/restconf/operations/toaster:make-toast
+     * { "input" : { "toaster:toasterDoneness" : "10", "toaster:toasterToastType":"wheat-bread" } }
+     */
+	@Override
+	public Future<RpcResult<Void>> makeToast(MakeToastInput input) {
+		// TODO_Auto-generated method stub
+		LOG.info("makeToast: {}", input);		
+		return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+	}
+
+	/**
+	 * RestConf RPC call implemented from the ToasterService interface.
+	 * Restocks the bread for the toaster
+	 * Implementation to be filled in a later chapter.
+	 * in postman, http://localhost:8181/restconf/operations/toaster:restock-toaster
+	 * { "input" : { "toaster:amountOfBreadToStock" : "3" } }
+	 */
+	@Override
+	public Future<RpcResult<Void>> restockToaster(RestockToasterInput input) {
+		// TODO_Auto-generated method stub
+		LOG.info( "restockToaster: {}", input );
+		return Futures.immediateFuture( RpcResultBuilder.<Void> success().build() );
+	}
+
+	@Override
+	public Future<RpcResult<GuestSeatOutput>> guestSeat(GuestSeatInput input) {
+		// TODO_Auto-generated method stub
+		LOG.info("ToasterImpl:geustSeat input name:"+input.getName());
+		GuestSeatOutput output = new GuestSeatOutputBuilder()
+				.setTable(readFromGreetingRegistry(input))
+				.build();
+		writeToGreetingRegistry(input, output);
+		return RpcResultBuilder.success(output).buildFuture();
+	}
+	
+    private void initializeDataTree(DataBroker db) {
+        LOG.info("Preparing to initialize the guest-chair");
+        WriteTransaction transaction = db.newWriteOnlyTransaction();
+        InstanceIdentifier<GuestChair> iid = InstanceIdentifier.create(GuestChair.class);
+        GuestChair guestChair = new GuestChairBuilder().build();
+        transaction.put(LogicalDatastoreType.OPERATIONAL, iid, guestChair);
+        CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+        
+        // Initialize operational and default config data in MD-SAL data store
+        // https://github.com/opendaylight/coretutorials/blob/stable/beryllium/toaster/ 
+        // ch4-ToasterConfigAndOperationalDataStore/toaster-impl/src/main/java/org/opendaylight/toaster/ToasterImpl.java
+        initToasterOperational();
+        initToasterConfiguration();
+        
+        Futures.addCallback(future, new LoggingFuturesCallBack<>("Failed to create greeting registry", LOG));
+    }
+    
+    /**
+     * Populates toaster's initial operational data into the MD-SAL operational
+     * data store.
+     * Note - we are simulating a device whose manufacture and model are fixed
+     * (embedded) into the hardware. / This is why the manufacture and model
+     * number are hardcoded.
+     */
+    private void initToasterOperational() {
+    	// Build the initial toaster operational data
+    	Toaster toaster = new ToasterBuilder().setToasterManufacturer( TOASTER_MANUFACTURER )
+    			.setToasterModelNumber( TOASTER_MODEL_NUMBER )
+    			.setToasterStatus( ToasterStatus.Up )
+    			.build();
+
+    	// Put the toaster operational data into the MD-SAL data store
+    	WriteTransaction tx = db.newWriteOnlyTransaction();
+    	tx.put(LogicalDatastoreType.OPERATIONAL, TOASTER_IID, toaster);
+
+    	// Perform the tx.submit asynchronously
+    	Futures.addCallback(tx.submit(), new FutureCallback<Void>() {
+    		@Override
+    		public void onSuccess(final Void result) {
+    			LOG.info("initToasterOperational: transaction succeeded");
+    		}
+    		
+    		@Override
+    		public void onFailure(final Throwable t) {
+    			LOG.error("initToasterOperational: transaction failed");
+    		}
+    	});
+
+    	LOG.info("initToasterOperational: operational status populated: {}", toaster);
+	}
+
+    /**
+     * Populates toaster's default config data into the MD-SAL configuration
+     * data store.  Note the database write to the tree are done in a synchronous fashion
+     */
+	private void initToasterConfiguration() {
+		// Build the default toaster config data
+		Toaster toaster = new ToasterBuilder().setDarknessFactor((long)1000).build();
+
+        // Place default config data in data store tree
+        WriteTransaction tx = db.newWriteOnlyTransaction();
+        tx.put(LogicalDatastoreType.CONFIGURATION, TOASTER_IID, toaster);
+        // Perform the tx.submit synchronously
+        tx.submit();
+        
+        LOG.info("initToasterConfiguration: default config populated: {}", toaster);
+	}
+
+	private String readFromGreetingRegistry(GuestSeatInput input) {
+        String result = "Guest seat " + input.getName();
+        ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
+        InstanceIdentifier<GuestChairEntry> iid = toInstanceIdentifier(input);
+        CheckedFuture<Optional<GuestChairEntry>, ReadFailedException> future =
+                transaction.read(LogicalDatastoreType.CONFIGURATION, iid);
+        Optional<GuestChairEntry> optional = Optional.absent();
+        try {
+            optional = future.checkedGet();
+        } catch (ReadFailedException e) {
+            LOG.warn("Reading GeustSeat Failed:",e);
+        }
+        if(optional.isPresent()) {
+            result = optional.get().getChair();
+        }
+        return result;
+    }  
+    
+    private void writeToGreetingRegistry(GuestSeatInput input, GuestSeatOutput output) {
+        WriteTransaction transaction = db.newWriteOnlyTransaction();
+        InstanceIdentifier<GuestChairEntry> iid = toInstanceIdentifier(input);
+        GuestChairEntry greeting = new GuestChairEntryBuilder()
+                .setChair(output.getTable())
+                .setName(input.getName())
+                .build();
+        transaction.put(LogicalDatastoreType.OPERATIONAL, iid, greeting);
+        CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+        Futures.addCallback(future, new LoggingFuturesCallBack<Void>("Failed to write greeting to greeting registry", LOG));
+    }
+
+    private InstanceIdentifier<GuestChairEntry> toInstanceIdentifier(GuestSeatInput input) {
+        InstanceIdentifier<GuestChairEntry> iid = InstanceIdentifier.create(GuestChair.class)
+            .child(GuestChairEntry.class, new GuestChairEntryKey(input.getName()));
+        return iid;
+    }
+}
+```
 ## Skip transaction notificator algorithm.
 [x] Skip transaction chain in part 15 of [helloWorld] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
 [x] Continue with another toaster example guide. [https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step] (https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step)
