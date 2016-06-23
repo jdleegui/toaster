@@ -10,8 +10,10 @@ package org.opendaylight.toaster.impl;
 import java.util.concurrent.Future;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
+import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
+import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChair;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChairBuilder;
@@ -30,6 +32,7 @@ import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
 
@@ -67,9 +70,9 @@ public class ToasterImpl implements ToasterService {
 		// TODO_Auto-generated method stub
 		LOG.info("ToasterImpl:geustSeat input name:"+input.getName());
 		GuestSeatOutput output = new GuestSeatOutputBuilder()
-				.setTable("Table of Toaster Guest:" + input.getName())
+				.setTable(readFromGreetingRegistry(input))
 				.build();
-		this.writeToGreetingRegistry(input, output);
+		writeToGreetingRegistry(input, output);
 		return RpcResultBuilder.success(output).buildFuture();
 	}
 	
@@ -83,6 +86,24 @@ public class ToasterImpl implements ToasterService {
         CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
         Futures.addCallback(future, new LoggingFuturesCallBack<>("Failed to create greeting registry", LOG));
     }
+    
+    private String readFromGreetingRegistry(GuestSeatInput input) {
+        String result = "Guest seat " + input.getName();
+        ReadOnlyTransaction transaction = db.newReadOnlyTransaction();
+        InstanceIdentifier<GuestChairEntry> iid = toInstanceIdentifier(input);
+        CheckedFuture<Optional<GuestChairEntry>, ReadFailedException> future =
+                transaction.read(LogicalDatastoreType.CONFIGURATION, iid);
+        Optional<GuestChairEntry> optional = Optional.absent();
+        try {
+            optional = future.checkedGet();
+        } catch (ReadFailedException e) {
+            LOG.warn("Reading GeustSeat Failed:",e);
+        }
+        if(optional.isPresent()) {
+            result = optional.get().getChair();
+        }
+        return result;
+    }  
     
     private void writeToGreetingRegistry(GuestSeatInput input, GuestSeatOutput output) {
         WriteTransaction transaction = db.newWriteOnlyTransaction();

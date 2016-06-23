@@ -19,8 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.ReadOnlyTransaction;
+import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
+import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.controller.mdsal.it.base.AbstractMdsalTestBase;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChair;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
@@ -28,6 +30,7 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntry;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntryBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.guest.chair.GuestChairEntryKey;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
@@ -117,5 +120,42 @@ public class ToasterIT extends AbstractMdsalTestBase {
             LOG.warn("Reading greeting failed:",e);
         }
         Assert.assertTrue(name + " not recorded in greeting registry",optional.isPresent());
+    }
+    
+    @Test
+    private void validateRPCResponse(String name,String response) throws InterruptedException, ExecutionException {
+        ToasterService service = getSession().getRpcService(ToasterService.class);
+
+        GuestSeatInput input = new GuestSeatInputBuilder()
+                .setName(name)
+                .build();
+        Future<RpcResult<GuestSeatOutput>> outputFuture = service.guestSeat(input);
+        RpcResult<GuestSeatOutput> outputResult = outputFuture.get();
+        Assert.assertTrue("RPC was unsuccessful", outputResult.isSuccessful());
+        Assert.assertEquals("Did not receive the expected response to helloWorld RPC", response,
+                outputResult.getResult().getTable());
+    }
+    
+    private void programResponse(String name, String response) throws TransactionCommitFailedException {
+        DataBroker db = getSession().getSALService(DataBroker.class);
+        WriteTransaction transaction = db.newWriteOnlyTransaction();
+        InstanceIdentifier<GuestChairEntry> iid = InstanceIdentifier.create(GuestChair.class)
+                .child(GuestChairEntry.class, new GuestChairEntryKey(name));
+        GuestChairEntry entry = new GuestChairEntryBuilder()
+                .setName(name)
+                .setChair(response)
+                .build();
+        transaction.put(LogicalDatastoreType.CONFIGURATION, iid, entry);
+        CheckedFuture<Void, TransactionCommitFailedException> future = transaction.submit();
+        future.checkedGet();
+    }
+    
+    @Test
+    public void testProgrammableRPC() throws InterruptedException, ExecutionException, TransactionCommitFailedException {
+        String name = "Colin Dixon";
+        String response = "Hola " + name;
+        programResponse(name,response);
+        validateRPCResponse(name,response);
+        validateGuestChair(name);
     }
 }
