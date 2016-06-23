@@ -13,6 +13,8 @@ import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfi
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.controller.md.sal.common.api.data.TransactionCommitFailedException;
 import org.opendaylight.controller.mdsal.it.base.AbstractMdsalTestBase;
+import org.opendaylight.toaster.impl.GuestChairDataChangeListenerFuture;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestChair;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInputBuilder;
@@ -123,6 +126,11 @@ public class ToasterIT extends AbstractMdsalTestBase {
     }
     
     @Test
+    private void validateGuestChair(String name, GuestChairDataChangeListenerFuture future) throws InterruptedException, TimeoutException, ExecutionException {
+        future.get(100, TimeUnit.MILLISECONDS);
+        Assert.assertTrue(name + " not recorded in greeting registry", future.isDone());
+    }
+    @Test
     private void validateRPCResponse(String name,String response) throws InterruptedException, ExecutionException {
         ToasterService service = getSession().getRpcService(ToasterService.class);
 
@@ -135,6 +143,7 @@ public class ToasterIT extends AbstractMdsalTestBase {
         Assert.assertEquals("Did not receive the expected response to helloWorld RPC", response,
                 outputResult.getResult().getTable());
     }
+    
     
     private void programResponse(String name, String response) throws TransactionCommitFailedException {
         DataBroker db = getSession().getSALService(DataBroker.class);

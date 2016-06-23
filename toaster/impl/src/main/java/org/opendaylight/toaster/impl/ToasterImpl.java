@@ -36,7 +36,7 @@ import com.google.common.base.Optional;
 import com.google.common.util.concurrent.CheckedFuture;
 import com.google.common.util.concurrent.Futures;
 
-public class ToasterImpl implements ToasterService {
+public class ToasterImpl implements ToasterService{
 
     private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
     private DataBroker db;
@@ -121,5 +121,5 @@ public class ToasterImpl implements ToasterService {
         InstanceIdentifier<GuestChairEntry> iid = InstanceIdentifier.create(GuestChair.class)
             .child(GuestChairEntry.class, new GuestChairEntryKey(input.getName()));
         return iid;
-    }   
+    }
 }
