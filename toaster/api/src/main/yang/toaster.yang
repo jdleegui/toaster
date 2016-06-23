@@ -54,7 +54,19 @@ module toaster {
     reference
       "RFC 2579, section 2.";
   }
-
+  
+  container guest-chair {
+    list guest-chair-entry {
+      key "name";
+      leaf name {
+        type string;
+      }
+      leaf chair {
+        type string;
+      }
+    }
+  }
+  
   container toaster {
     presence
       "Indicates the toaster service is available";
