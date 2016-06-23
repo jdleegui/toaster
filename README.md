@@ -1167,6 +1167,7 @@ public class ToasterIT extends AbstractMdsalTestBase {
 }
 ```
 ## Add default callback stuff to check toast maker
+[x] [Step 5] (https://github.com/opendaylight/coretutorials/blob/stable/beryllium/toaster/ch5-ToasterApiRPCs/toaster-impl/src/main/java/org/opendaylight/toaster/ToasterImpl.java)
 ```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
