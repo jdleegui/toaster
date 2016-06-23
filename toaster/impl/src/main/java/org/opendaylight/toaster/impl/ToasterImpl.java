@@ -9,6 +9,7 @@ package org.opendaylight.toaster.impl;
 
 import java.util.concurrent.Future;
 
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatInput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutput;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.GuestSeatOutputBuilder;
@@ -23,6 +24,12 @@ import org.slf4j.LoggerFactory;
 public class ToasterImpl implements ToasterService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
+    private DataBroker db;
+    
+    public ToasterImpl(DataBroker db)
+    {
+    	this.db = db;
+    }
 
 	@Override
 	public Future<RpcResult<Void>> cancelToast() {
@@ -45,6 +52,7 @@ public class ToasterImpl implements ToasterService {
 	@Override
 	public Future<RpcResult<GuestSeatOutput>> guestSeat(GuestSeatInput input) {
 		// TODO_Auto-generated method stub
+		LOG.info("ToasterImpl:geustSeat input name:"+input.getName());
 		GuestSeatOutput output = new GuestSeatOutputBuilder()
 				.setTable("Table of Toaster Guest:" + input.getName())
 				.build();

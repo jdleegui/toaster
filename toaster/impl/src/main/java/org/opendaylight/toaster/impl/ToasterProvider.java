@@ -9,6 +9,7 @@ package org.opendaylight.toaster.impl;
 
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.ProviderContext;
 import org.opendaylight.controller.sal.binding.api.BindingAwareBroker.RpcRegistration;
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.sal.binding.api.BindingAwareProvider;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.toaster.rev150105.ToasterService;
 import org.slf4j.Logger;
@@ -22,7 +23,8 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
     @Override
     public void onSessionInitiated(ProviderContext session) {
         LOG.info("ToasterProvider Session Initiated");
-        toasterService = session.addRpcImplementation(ToasterService.class, new ToasterImpl());
+        DataBroker dba = session.getSALService(DataBroker.class);
+        toasterService = session.addRpcImplementation(ToasterService.class, new ToasterImpl(dba));
     }
 
     @Override
