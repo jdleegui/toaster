@@ -1168,7 +1168,7 @@ public class ToasterIT extends AbstractMdsalTestBase {
 ```
 ## Skip transaction notificator algorithm.
 [x] Skip transaction chain in part 15 of [helloWorld] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
-
+[x] Continue with another toaster example guide. [https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step] (https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step)
 ## Reference
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
