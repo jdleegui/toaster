@@ -310,8 +310,9 @@ public class ToasterImpl implements ToasterService {
     return RpcResultBuilder.success(output).buildFuture();
   }
 }
-
+```
 2. Modify ToasterProvider to initiate toasterImpl class
+```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
  *
@@ -348,7 +349,9 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 }
 
 2.mvn clean generate-sources
-  mvn clean install -DskipTests
+  mvn clean install -DskipTests > /tmp/error.txt
+  $tail -f /tmp/error.txt
+  $tail -f /tmp/error.txt
 3.toaster$ ./karaf/target/assembly/bin/karaf 
   > display
   > feature:list
