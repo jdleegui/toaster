@@ -250,10 +250,10 @@ module toaster {
 - mvn clean install -DskipTests
 - curl --verbose -u admin:admin http://localhost:8181/restconf/config/toaster:toaster
 ## 3. Create basic skeleton code
-- [X][Step 3] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial) :Exersice 3:w 
-```
-1.Create ToasterImpl class in eclipse.
+- [X][Step 3] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial) :Exersice 3
 
+-Create ToasterImpl class in eclipse.
+```
 toaster$ cat toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
@@ -309,8 +309,7 @@ public class ToasterImpl implements ToasterService {
   }
 }
 ```
-2. Modify ToasterProvider to initiate toasterImpl class
-
+- Modify ToasterProvider to initiate toasterImpl class
 ```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
@@ -355,7 +354,7 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
   > feature:list
 4.git add README.md && git add impl/src/main/java/org/opendaylight/toaster/impl/ToasterImpl.java 
 ```
-##Test Container of YANG
+## Test YANG container
 - Modify YANG 'toaster/api/src/main/yang/toaster.yang’
 ```
 module toaster {
@@ -533,7 +532,6 @@ module toaster {
     }
   }
 }
-
 ```
 - Add DB handler in ToasterProvider class ‘toaster/impl/src/main/java/org/opendaylight/toaster/impl/ToasterProvider.java’
 ```
@@ -711,7 +709,6 @@ public class LoggingFuturesCallBack <V> implements FutureCallback <V> {
         LOG.info("Success! {} ", arg0);
 	}
 }
-
 ```
 - Add test routine ‘/toaster/it/src/test/java/org/opendaylight/toaster/it/ToasterIT.java’
 ```
@@ -836,10 +833,9 @@ public class ToasterIT extends AbstractMdsalTestBase {
         Assert.assertTrue(name + " not recorded in greeting registry",optional.isPresent());
     }
 }
-
 ```
 ## Add test code
--Change callback ‘/toaster/impl/src/main/java/org/opendaylight/toaster/impl/LoggingFuturesCallBack.java’
+- Change callback ‘/toaster/impl/src/main/java/org/opendaylight/toaster/impl/LoggingFuturesCallBack.java’
 ```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
@@ -1005,7 +1001,6 @@ public class ToasterImpl implements ToasterService {
         return iid;
     }   
 }
-
 ```
 -Channge test code ‘/toaster/it/src/test/java/org/opendaylight/toaster/it/ToasterIT.java’
 ```
@@ -1170,8 +1165,8 @@ public class ToasterIT extends AbstractMdsalTestBase {
         validateGuestChair(name);
     }
 }
-
 ```
+# Reference
 - See [toaster guide] (https://github.com/opendaylight/coretutorials/tree/master/toaster)
 - See [CISCO toaster] (https://github.com/opendaylight/controller/blob/master/opendaylight/md-sal/samples/toaster-provider/src/main/java/org/opendaylight/controller/sample/toaster/provider/OpendaylightToaster.java)
 - [hello_world1] ( https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
