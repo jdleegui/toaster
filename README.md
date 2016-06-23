@@ -351,7 +351,6 @@ public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 2.mvn clean generate-sources
   mvn clean install -DskipTests > /tmp/error.txt
   $tail -f /tmp/error.txt
-  $tail -f /tmp/error.txt
 3.toaster$ ./karaf/target/assembly/bin/karaf 
   > display
   > feature:list
