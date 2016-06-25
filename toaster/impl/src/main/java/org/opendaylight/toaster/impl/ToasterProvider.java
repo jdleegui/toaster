@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class ToasterProvider implements BindingAwareProvider, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(ToasterProvider.class);
-    RpcRegistration < ToasterService > toasterService;
+    private RpcRegistration < ToasterService > toasterService;
     
     @Override
     public void onSessionInitiated(ProviderContext session) {
