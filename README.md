@@ -1384,8 +1384,8 @@ public class ToasterImpl implements ToasterService {
 }
 ```
 ## Make toaster (do not use notification service)
-[x] [ToasterImpl.java:state 6] (https://github.com/opendaylight/coretutorials/blob/stable/beryllium/toaster/ch6-ToasterRPCImplementation/toaster-impl/src/main/java/org/opendaylight/toaster/ToasterImpl.java)
-## Skip transaction notificator algorithm.
+- [x] [ToasterImpl.java:state 6] (https://github.com/opendaylight/coretutorials/blob/stable/beryllium/toaster/ch6-ToasterRPCImplementation/toaster-impl/src/main/java/org/opendaylight/toaster/ToasterImpl.java)
+- Skip transaction notificator algorithm.
 ```
 /*
  * Copyright © 2015 Copyright (c) 2015 Yoyodyne, Inc. and others.  All rights reserved.
@@ -1850,10 +1850,11 @@ public class ToasterImpl implements ToasterService {
             } );
 
 			return null;
-		}
+	}
     }   
 }
 ```
+
 [x] Skip transaction chain in part 15 of [helloWorld] (https://wiki.opendaylight.org/view/Controller_Core_Functionality_Tutorials:Application_Development_Tutorial)
 [x] Continue with another toaster example guide. [https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step] (https://wiki.opendaylight.org/view/OpenDaylight_Controller:MD-SAL:Toaster_Step-By-Step)
 ## Reference
