@@ -1854,15 +1854,17 @@ public class ToasterImpl implements ToasterService {
     }   
 }
 ```
-# End of example
 
-[x] It is not impossible continuing with another example because version mangling.
-    - There's many good example written under Lithium version with JDK 1.7.
-    - These examples are not working anymore under Beryllium with JDK 1.8.
-    - Default repository prohibit use of eclipse guide.
-    - opendaylight.snashot works well but it makes eclipse to be hanged. public works well.
+## End of example
+
+- [x] It is not impossible continuing with another example because version mangling.
+
+   * There's many good example written under Lithium version with JDK 1.7.
+   * These examples are not working anymore under Beryllium with JDK 1.8.
+   * Default repository prohibit use of eclipse guide.
+   * opendaylight.snashot works well but it makes eclipse to be hanged. public works well.
     
-[ ] Another effort will be continue of the release team fixed those error.
+- [ ] Another effort will be continue of the release team fixed those error.
 
 ## Skipped part.
 
